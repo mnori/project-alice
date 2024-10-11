@@ -1,0 +1,49 @@
+Cat toy for mum
+
+Luke
+- Tommy by the Who
+- ??? - maybe Dark Side of the Moon - NOFX The Longest EP or other recent
+
+Treephie
+Something to do with gaming
+
+///////////////////////////////////////////////////
+
+General ideas
+
+SD sticker dimensions
+
+W: 18mm
+H: 24mm
+
+Image in pixels:
+1800px
+2400px
+
+2 images, front and back
+
+Front sticker 
+    - colour background that goes through the rainbow across 1-32
+    - Important information enclosed
+    - Trigger warning
+    - Contains 1x free NFT
+    
+    
+Back sticker
+    - Anonymous logo
+    - "Series 1" number
+    - Serial number e.g. SN 1/32
+
+Each disk has an embedded NFT
+
+Except 1
+
+Solve the equation to make them fit on the sheet.
+
+Knowns:
+- Horizontal edge margin
+- Vertical edge margin
+- Width and height of stickers
+- Horizontal and vertical margins between stickers
+- With all these numbers you can calculate the total width and height of the image
+- Then just plug in the margins around that bit
