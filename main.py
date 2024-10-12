@@ -5,6 +5,10 @@ from PIL import Image
 from matplotlib import pyplot as plt
 
 def write_text(whole_text):
+
+    ft2 = cv::freetype::createFreeType2();
+    ft2->loadFontData( "fonts/Ubuntu-Regular.ttf", 0 );
+
     wordwrap_width = 36
     wrapped_text = textwrap.wrap(whole_text, wordwrap_width)
 
@@ -18,8 +22,8 @@ def write_text(whole_text):
         font = cv2.FONT_HERSHEY_SIMPLEX
         coord = (margin_left + 10, margin_top + (line_num * line_height))
 
-        cv2.putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (0,0,0), 16, cv2.LINE_AA)
-        cv2.putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (255,255,255), 4, cv2.LINE_AA)
+        ft2->putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (0,0,0), 16, cv2.LINE_AA)
+        ft2->putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (255,255,255), 4, cv2.LINE_AA)
 
         # cv2.putText(label_image, line, coord, font, text_size, (0, 255, 0), thickness, cv2.LINE_AA)
         line_num += 1
