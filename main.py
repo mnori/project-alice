@@ -12,7 +12,7 @@ def apply_text(whole_text):
     print("Hello World")
 
     font_path = "fonts/Ubuntu-Regular.ttf"
-    font_size = 24
+    font_size = 100
 
     font = ImageFont.truetype(font_path, font_size)
     # font_height = font.getsize("A")[1]  # Calculate the height using a sample character
@@ -26,7 +26,33 @@ def apply_text(whole_text):
 
     image_pil = Image.fromarray(image)  # Convert OpenCV image to PIL image
     draw = ImageDraw.Draw(image_pil)
-    draw.text(position, text, font=font, fill=color)
+    
+    wordwrap_width = 36
+    wrapped_text = textwrap.wrap(whole_text, wordwrap_width)
+
+    
+
+    line_num = 0
+    for line in wrapped_text:
+        text_size = 2.5
+        thickness = 3
+        margin_left = 50
+        margin_top = 150
+        line_height = 120
+        # font = cv2.FONT_HERSHEY_SIMPLEX
+        coord = (margin_left + 10, margin_top + (line_num * line_height))
+
+        draw.text(coord, line, font=font, fill=color)
+
+        line_num += 1
+        
+
+    #     # cv2.putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (0,0,0), 16, cv2.LINE_AA)
+    #     # cv2.putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (255,255,255), 4, cv2.LINE_AA)
+
+    
+
+
     image_with_text = np.array(image_pil)  # Convert PIL image back to OpenCV image
 
     # cv2.imshow("Image with Text", image_with_text)
@@ -42,29 +68,7 @@ def apply_text(whole_text):
     # Save the image object to a PNG file
     image_with_text.save(image_file_name)
 
-    # ft = cv2.freetype.createFreeType2()
-    # ft.loadFontData("fonts/Ubuntu-Regular.ttf", 0)
-    # width, height = ft.getTextSize(text, font_height, thickness)[0]
-
-    # wordwrap_width = 36
-    # wrapped_text = textwrap.wrap(whole_text, wordwrap_width)
-
-    # line_num = 0
-    # for line in wrapped_text:
-    #     text_size = 2.5
-    #     thickness = 3
-    #     margin_left = 50
-    #     margin_top = 150
-    #     line_height = 120
-    #     font = cv2.FONT_HERSHEY_SIMPLEX
-    #     coord = (margin_left + 10, margin_top + (line_num * line_height))
-
-    #     cv2.putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (0,0,0), 16, cv2.LINE_AA)
-    #     cv2.putText(label_image, line,coord, cv2.FONT_HERSHEY_COMPLEX, text_size, (255,255,255), 4, cv2.LINE_AA)
-
-    #     # cv2.putText(label_image, line, coord, font, text_size, (0, 255, 0), thickness, cv2.LINE_AA)
-    #     line_num += 1
-
+    
 
 
 # # Make image using set width and height
