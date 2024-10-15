@@ -7,46 +7,48 @@ from matplotlib import pyplot as plt
 from PIL import ImageFont
 from PIL import ImageDraw
 
+font_size =  140
+config = {
+    "margin_left": 90,
+    "margin_top": 50,
+    "font_size": font_size,
+    "stroke_width": 15,
+    "wordwrap_width": 34 / (font_size / 100),
+    "background_color": (255, 0, 0),
+    "stroke_darkness": 0.5,
+    "text_color": (255, 255, 255),  # White color
+    "font_path": "fonts/Ubuntu-Regular.ttf",
+    "img_width": 1800,
+    "img_height": 2400,
+    "image_file_name": 'output/firstone.png'
+}
+
 def main():
     whole_text = "! Important information     ! Trigger warning            ! Stay safe "
     apply_text(whole_text)
 
 def apply_text(whole_text):
-    margin_left = 90
-    margin_top = 50
-    font_size = 140
-    stroke_width = 15
-    wordwrap_width = 34 / (font_size / 100)
-    background_color = (255, 0, 0)    
-    stroke_darkness = 0.5
     stroke_fill = (
-        int(background_color[0] * stroke_darkness), 
-        int(background_color[1] * stroke_darkness), 
-        int(background_color[2] * stroke_darkness))
-        
-    text_color = (255, 255, 255)  # White color
-    font_path = "fonts/Ubuntu-Regular.ttf"
-    img_width = 1800
-    img_height = 2400
-    image_file_name = 'output/firstone.png'
-
-    font = ImageFont.truetype(font_path, font_size)
-    image = np.zeros((img_height, img_width, 3), dtype=np.uint8)  # Example image
-    image[:] = background_color
+        int(config["background_color"][0] * config["stroke_darkness"]), 
+        int(config["background_color"][1] * config["stroke_darkness"]), 
+        int(config["background_color"][2] * config["stroke_darkness"]))
+    wrapped_text = textwrap.wrap(whole_text, config["wordwrap_width"])
+    font = ImageFont.truetype(config["font_path"], config["font_size"])
+    image = np.zeros((config["img_height"], config["img_width"], 3), dtype=np.uint8)  # Example image
+    image[:] = config["background_color"]
     image_pil = Image.fromarray(image)  # Convert OpenCV image to PIL image
     draw = ImageDraw.Draw(image_pil)
-    wrapped_text = textwrap.wrap(whole_text, wordwrap_width)
 
     line_num = 0
     for line in wrapped_text:
-        line_height = font_size
-        coord = (margin_left, margin_top + (line_num * line_height))
+        line_height = config["font_size"]
+        coord = (config["margin_left"], config["margin_top"] + (line_num * line_height))
         draw.text(
             coord, 
             line, 
             font=font, 
-            fill=text_color,
-            stroke_width=stroke_width,
+            fill=config["text_color"],
+            stroke_width=config["stroke_width"],
             stroke_fill=stroke_fill)
         line_num += 1
 
@@ -56,6 +58,6 @@ def apply_text(whole_text):
     image_with_text = Image.fromarray(image_with_text)
 
     # Save the image object to a PNG file
-    image_with_text.save(image_file_name)
+    image_with_text.save(config["image_file_name"])
 
 main()
