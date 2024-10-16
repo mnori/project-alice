@@ -15,7 +15,7 @@ config = {
     "background_color": (255, 0, 0),
     "text_color": (255, 255, 255),  # White color
     "margin_left": 45,
-    "margin_top": 25,
+    "margin_top": 900,
     "font_size": font_size,
     "wordwrap_width": 25,
     "line_height": 1.3 * font_size,
@@ -65,8 +65,9 @@ def draw_text(draw):
         line_num += 1
 
 def draw_logo(draw):
-    img = Image.open("assets/anonymous_emblem.png")
-    img = img.resize((200, 200))
-    draw.paste(img, (config["img_width"] - 200, config["img_height"] - 200), img)
+    # img = Image.open("assets/anonymous_emblem.png")
+    img = Image.open("assets/warning.png")
+    img = img.resize((700, 700))
+    draw.paste(img, (100, 100), img)
 
 main()
