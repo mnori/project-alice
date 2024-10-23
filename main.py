@@ -20,13 +20,13 @@ def main():
         os.remove(f)
 
     initial_color = (255, 0, 0)
-    target_color = (0, 255, 0)
+    target_color = (255, 255, 0)
 
     # create images
     for sn in range(1, 1 + n_units):
+        interpolated_color = get_rainbow_interpolated_colour(n_units - 1, sn - 1)
+        print("Interpolated color: ", interpolated_color)
 
-        interpolated_color = get_interpolated_colour(initial_color, target_color, n_units - 1, sn - 1)
-        
         # front image
         create_image({
             "img_width": 900,
@@ -76,7 +76,7 @@ def create_image(config):
     main_image = Image.fromarray(image)
 
     draw_image(main_image, config["logo_filepath"])
-
+    
     draw = ImageDraw.Draw(main_image)
     draw_text(draw, config)
 
@@ -109,10 +109,13 @@ def draw_text(draw, config):
             stroke_fill=stroke_fill)
         line_num += 1
 
-# from https://stackoverflow.com/questions/64034165/how-to-do-linear-interpolation-with-colors
-def get_interpolated_colour(initial_color, target_color, number_of_rows, row):
-    deltas=[(target_color[i] - initial_color[i])/number_of_rows for i in range(3)]
-    interpolated_color=tuple([initial_color[i] + (deltas[i] * row) for i in range(3)])
-    return interpolated_color
+def get_rainbow_interpolated_colour(n_colours, position):
+    position = (position / 6) * 5 # chop of purple to red part
+    hue = (position / n_colours) * 255
+    saturation = 255
+    value = 255
+    hsv = (hue, saturation, value)
+    rgb = colorsys.hsv_to_rgb(hsv[0] / 255, hsv[1] / 255, hsv[2] / 255)
+    return (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
 
 main()
