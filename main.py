@@ -29,8 +29,9 @@ def main():
 
         # front image
         create_image({
-            "img_width": 900,
-            "img_height": 1200,
+            "img_width": 900, # 18mm / 2
+            "img_height": 1200, # 24mm / 2
+            "logo_size": 700,
             "font_path": "fonts/Ubuntu-Bold.ttf",
             "output_filepath": "output/sn_"+str(sn)+"_front.png",
             "background_color": interpolated_color,
@@ -52,11 +53,12 @@ def main():
         create_image({
             "img_width": 900,
             "img_height": 1200,
+            "logo_size": 820,
             "font_path": "fonts/Ubuntu-Bold.ttf",
             "output_filepath": "output/sn_"+str(sn)+"_back.png",
             "front_background_color": (255, 0, 0),
             "background_color": (255, 255, 255),
-            "logo_filepath": 'assets/logo.png',
+            "logo_filepath": 'assets/logo_alt.png',
             "text_color": (255, 255, 255),
             "margin_left": 45,
             "margin_top": 1000,
@@ -75,7 +77,7 @@ def create_image(config):
     image[:] = config["background_color"]
     main_image = Image.fromarray(image)
 
-    draw_image(main_image, config["logo_filepath"])
+    draw_image(main_image, config)
     
     draw = ImageDraw.Draw(main_image)
     draw_text(draw, config)
@@ -84,10 +86,11 @@ def create_image(config):
     image_with_text = Image.fromarray(image_with_text)
     image_with_text.save(config["output_filepath"])
 
-def draw_image(main_image, image_filepath):
-    img = Image.open(image_filepath)
-    img = img.resize((700, 700))
-    main_image.paste(img, (100, 100), img)
+def draw_image(main_image, config):
+    img = Image.open(config["logo_filepath"])
+    img = img.resize((config["logo_size"], config["logo_size"]))
+    offset = int((config["img_width"] - config["logo_size"]) / 2)
+    main_image.paste(img, (offset, offset), img)
 
 def draw_text(draw, config):
     stroke_fill = (
