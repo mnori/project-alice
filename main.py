@@ -11,7 +11,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 font_size = 70
-n_units = 32
+n_units = 4 * 9 # 4 rows of 9 units
 
 def main():
     clear_output_folder()
@@ -155,7 +155,13 @@ def combine_label_images():
         label_img = Image.open("output/sn_"+str(sn)+"_front.png").convert("RGBA")
         offset = (
             lr_margin + (x_position * (label_width + gap_between)), 
-            tb_margin + (y_position * (label_height + gap_between)))
+            tb_margin + ((y_position * 2) * (label_height + gap_between)))
+        combined_save.paste(label_img, offset, label_img)
+
+        label_img = Image.open("output/sn_"+str(sn)+"_back.png").convert("RGBA")
+        offset = (
+            lr_margin + (x_position * (label_width + gap_between)), 
+            tb_margin + (((y_position * 2) + 1) * (label_height + gap_between)))
         combined_save.paste(label_img, offset, label_img)
     
     combined_save.save("output/combined.png")
