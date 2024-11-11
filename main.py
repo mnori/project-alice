@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import textwrap
 import PIL
+import math
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
@@ -13,26 +14,28 @@ font_size = 70
 n_units = 32
 
 def main():
+    clear_output_folder()
+    create_label_images()
+    combine_label_images()
 
-    # clear output folder
+def clear_output_folder():
     files = glob.glob('output/*')
     for f in files:
         os.remove(f)
 
-    initial_color = (255, 0, 0)
-    target_color = (255, 255, 0)
-
+def create_label_images():
+    
     # create images
     for sn in range(1, 1 + n_units):
         interpolated_color = get_rainbow_interpolated_colour(n_units - 1, sn - 1)
         print("Interpolated color: ", interpolated_color)
 
         # front image
-        create_image({
+        create_label_image({
             "img_width": 900, # 18mm / 2
             "img_height": 1200, # 24mm / 2
-            "logo_size": 700,
-            "font_path": "fonts/Ubuntu-Bold.ttf",
+            "logo_size": 820,
+            "font_path": "assets/fonts/Ubuntu-Bold.ttf",
             "output_filepath": "output/sn_"+str(sn)+"_front.png",
             "background_color": interpolated_color,
             "logo_filepath": 'assets/warning.png',
@@ -50,11 +53,11 @@ def main():
                 "Stay safe "
         })
         # back image
-        create_image({
+        create_label_image({
             "img_width": 900,
             "img_height": 1200,
             "logo_size": 820,
-            "font_path": "fonts/Ubuntu-Bold.ttf",
+            "font_path": "assets/fonts/Ubuntu-Bold.ttf",
             "output_filepath": "output/sn_"+str(sn)+"_back.png",
             "front_background_color": (255, 0, 0),
             "background_color": (255, 255, 255),
@@ -72,7 +75,7 @@ def main():
                 "SN "+str(sn)+"/"+str(n_units)+" \n" 
         })
 
-def create_image(config):
+def create_label_image(config):
     image = np.zeros((config["img_height"], config["img_width"], 3), dtype=np.uint8)
     image[:] = config["background_color"]
     main_image = Image.fromarray(image)
@@ -120,5 +123,41 @@ def get_rainbow_interpolated_colour(n_colours, position):
     hsv = (hue, saturation, value)
     rgb = colorsys.hsv_to_rgb(hsv[0] / 255, hsv[1] / 255, hsv[2] / 255)
     return (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
+
+def combine_label_images():
+    # see table for deets
+    lr_margin = 600
+    tb_margin = 750
+    gap_between = 150
+    label_width = 900
+    label_height = 1200
+    labels_per_row = 9
+    combined_width = \
+        lr_margin * 2 + \
+        (label_width * labels_per_row) + \
+        (gap_between * (labels_per_row - 1))
+    n_rows = int(np.ceil(n_units / labels_per_row)) * 2
+    combined_height = \
+        tb_margin * 2 + \
+        (label_height * n_rows) + \
+        (gap_between * (n_rows - 1))
+    combined_np = np.zeros((combined_height, combined_width, 3), dtype=np.uint8)
+    combined_np[:] = (255, 255, 255)
+    combined_save = Image.fromarray(combined_np).convert("RGBA")
+
+    # Paste images here
+    for sn in range(1, 1 + n_units):
+        ## get front, paste
+        snm1 = sn - 1
+        x_position = snm1 % 9
+        y_position = math.floor(snm1 / 9)
+
+        label_img = Image.open("output/sn_"+str(sn)+"_front.png").convert("RGBA")
+        offset = (
+            lr_margin + (x_position * (label_width + gap_between)), 
+            tb_margin + (y_position * (label_height + gap_between)))
+        combined_save.paste(label_img, offset, label_img)
+    
+    combined_save.save("output/combined.png")
 
 main()
